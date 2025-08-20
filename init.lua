@@ -1,4 +1,3 @@
-
 -- Leader
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
@@ -7,7 +6,7 @@ vim.g.have_nerd_font = false
 
 -- Options
 vim.o.number = true
--- vim.o.relativenumber = true
+vim.o.relativenumber = true
 vim.o.mouse = 'a'
 vim.o.showmode = false
 
@@ -43,6 +42,30 @@ vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right win
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
+local function copy_wsl_path()
+  local path = vim.fn.expand '%:p'
+  if path == '' then
+    print 'No file to copy (empty buffer or no name).'
+    return
+  end
+
+  local distro = vim.env.WSL_DISTRO_NAME or vim.env.WSL_DISTRO or 'Ubuntu'
+
+  local trimmed = path:gsub('^/', '')
+  local backslashes = trimmed:gsub('/', '\\')
+
+  local unc = '\\\\wsl.localhost\\' .. distro .. '\\' .. backslashes
+
+  vim.fn.setreg('+', unc)
+
+  pcall(vim.fn.setreg, '*', unc)
+
+  print('Copied WSL UNC path: ' .. unc)
+end
+
+vim.api.nvim_create_user_command('CopyWslPath', copy_wsl_path, { desc = 'Copy current file path as WSL UNC path to clipboard' })
+vim.keymap.set('n', '<leader>pw', copy_wsl_path, { desc = 'Copy WSL UNC path to clipboard' })
+
 -- Autocommands
 vim.api.nvim_create_autocmd('TextYankPost', {
   desc = 'Highlight when yanking (copying) text',
@@ -68,7 +91,8 @@ rtp:prepend(lazypath)
 require('lazy').setup({
   'NMAC427/guess-indent.nvim',
 
-  { 'lewis6991/gitsigns.nvim',
+  {
+    'lewis6991/gitsigns.nvim',
     opts = {
       signs = {
         add = { text = '+' },
@@ -80,7 +104,8 @@ require('lazy').setup({
     },
   },
 
-  { 'folke/which-key.nvim',
+  {
+    'folke/which-key.nvim',
     event = 'VimEnter',
     opts = {
       delay = 0,
@@ -125,7 +150,8 @@ require('lazy').setup({
     },
   },
 
-  { 'nvim-telescope/telescope.nvim',
+  {
+    'nvim-telescope/telescope.nvim',
     event = 'VimEnter',
     dependencies = {
       'nvim-lua/plenary.nvim',
@@ -323,7 +349,8 @@ require('lazy').setup({
     end,
   },
 
-  { 'stevearc/conform.nvim',
+  {
+    'stevearc/conform.nvim',
     event = { 'BufWritePre' },
     cmd = { 'ConformInfo' },
     keys = {
@@ -355,7 +382,8 @@ require('lazy').setup({
     },
   },
 
-  { 'saghen/blink.cmp',
+  {
+    'saghen/blink.cmp',
     event = 'VimEnter',
     version = '1.*',
     dependencies = {
@@ -387,7 +415,8 @@ require('lazy').setup({
     },
   },
 
-  { 'folke/tokyonight.nvim',
+  {
+    'folke/tokyonight.nvim',
     priority = 1000,
     config = function()
       require('tokyonight').setup {
@@ -400,7 +429,8 @@ require('lazy').setup({
 
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
 
-  { 'echasnovski/mini.nvim',
+  {
+    'echasnovski/mini.nvim',
     config = function()
       require('mini.ai').setup { n_lines = 500 }
       require('mini.surround').setup()
@@ -412,7 +442,8 @@ require('lazy').setup({
     end,
   },
 
-  { 'nvim-treesitter/nvim-treesitter',
+  {
+    'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
     main = 'nvim-treesitter.configs',
     opts = {
@@ -424,6 +455,8 @@ require('lazy').setup({
   },
 
   require 'kickstart.plugins.indent_line',
+
+  { 'tpope/vim-fugitive' },
 }, {
   ui = {
     icons = vim.g.have_nerd_font and {} or {
