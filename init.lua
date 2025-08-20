@@ -75,6 +75,14 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
+vim.api.nvim_create_autocmd('VimEnter', {
+  desc = 'Set working directory to shell cwd on startup',
+  group = vim.api.nvim_create_augroup('kickstart-set-cwd', { clear = true }),
+  callback = function()
+    vim.cmd 'cd '
+  end,
+})
+
 -- Install lazy.nvim
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
