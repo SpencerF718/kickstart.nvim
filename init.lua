@@ -197,8 +197,8 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
 
       vim.keymap.set('n', '<leader>sg', function()
-        builtin.live_grep { cwd = '/home/spencer' }
-      end, { desc = '[S]earch by [G]rep in /home/spencer' })
+        builtin.live_grep { cwd = vim.loop.os_homedir() }
+      end, { desc = '[S]earch by [G]rep in home directory' })
 
       vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
       vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
