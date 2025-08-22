@@ -190,7 +190,7 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
 
       vim.keymap.set('n', '<leader>sf', function()
-        builtin.live_grep { cwd = vim.loop.os_homedir() }
+        builtin.find_files { cwd = vim.loop.os_homedir() }
       end, { desc = '[S]earch by [F]ile in home directory' })
 
       vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
