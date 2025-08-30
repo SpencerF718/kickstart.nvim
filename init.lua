@@ -4,6 +4,8 @@ vim.g.maplocalleader = ' '
 
 vim.g.have_nerd_font = false
 
+vim.g.netrw_keepdir = 0
+
 -- Options
 vim.o.number = true
 vim.o.relativenumber = true
